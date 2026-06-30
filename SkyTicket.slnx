@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SkyTicket.API/SkyTicket.API.csproj" />
+  <Project Path="SkyTicket.Cliente/SkyTicket.Cliente.csproj" />
+</Solution>
