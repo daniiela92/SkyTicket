@@ -1,0 +1,123 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+
+namespace SkyTicket.API.Controllers
+{
+    public class AirplanesController : ApiController
+    {
+        DataClasses1DataContext dc = new DataClasses1DataContext("workstation id = SkyTicketDatabase.mssql.somee.com; packet size = 4096; user id = daniielapaiis92_SQLLogin_1; pwd=mh1cyqg5pj;data source = SkyTicketDatabase.mssql.somee.com; persist security info=False;initial catalog = SkyTicketDatabase; TrustServerCertificate=True");
+
+        // GET api/Airplanes
+        public List<Airplane> Get()
+        {
+            var airplanesList = from Airplane in dc.Airplanes select Airplane;
+
+            return airplanesList.ToList();
+        }
+
+        // GET api/Airplanes/5
+        public IHttpActionResult Get(int id)
+        {
+            var airplanesList = dc.Airplanes.SingleOrDefault(x => x.Id == id);
+
+            if (airplanesList != null)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, airplanesList));
+
+            }
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+        }
+
+        // POST api/Airplanes
+        public IHttpActionResult Post([FromBody] Airplane newAirplane)
+        {
+
+            Airplane airplane = dc.Airplanes.FirstOrDefault(a => a.Id == newAirplane.Id);
+
+            if (airplane != null)
+            { 
+            
+                return ResponseMessage(Request.CreateResponse(System.Net.HttpStatusCode.Conflict));
+
+            }
+
+            dc.Airplanes.InsertOnSubmit(newAirplane);
+
+            try
+            {
+                dc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
+
+            }
+            
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created));
+
+
+        }
+
+        // PUT api/Airplanes/5
+        public IHttpActionResult Put(int id, [FromBody] Airplane newAirplane)
+        {
+
+            Airplane airplane = dc.Airplanes.FirstOrDefault(a => a.Id == id);
+
+            if(airplane == null) 
+            {
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+
+            }
+
+            airplane.Brand = newAirplane.Brand;
+            airplane.Model = newAirplane.Model;
+            airplane.EconomySeats = newAirplane.EconomySeats;
+            airplane.BusinessSeats = newAirplane.BusinessSeats;
+            airplane.IsActive = newAirplane.IsActive;
+
+            try
+            {
+                dc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
+            }
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
+        }
+
+        // DELETE api/Airplanes/5
+        public IHttpActionResult Delete(int id)
+        {
+
+            Airplane airplane = dc.Airplanes.FirstOrDefault(a => a.Id == id);
+
+            if (airplane != null)
+            {
+                dc.Airplanes.DeleteOnSubmit(airplane);
+                try
+                {
+                    dc.SubmitChanges();
+                }
+                catch (Exception e)
+                {
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
+                }
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
+
+            }
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+        }
+    }
+}
