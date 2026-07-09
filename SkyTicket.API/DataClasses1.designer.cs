@@ -1122,6 +1122,7 @@ namespace SkyTicket.API
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Passenger_Ticket", Storage="_Tickets", ThisKey="Id", OtherKey="PassengerId")]
+		[JsonIgnore]
 		public EntitySet<Ticket> Tickets
 		{
 			get
