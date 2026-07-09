@@ -12,6 +12,10 @@ namespace SkyTicket.API.Controllers
         DataClasses1DataContext dc = new DataClasses1DataContext("workstation id = SkyTicketDatabase.mssql.somee.com; packet size = 4096; user id = daniielapaiis92_SQLLogin_1; pwd=mh1cyqg5pj;data source = SkyTicketDatabase.mssql.somee.com; persist security info=False;initial catalog = SkyTicketDatabase; TrustServerCertificate=True");
 
         // GET api/Airplanes
+        /// <summary>
+        /// Returns a list of all airplanes 
+        /// </summary>
+        /// <returns>List of airplanes</returns>
         public List<Airplane> Get()
         {
             var airplanesList = from Airplane in dc.Airplanes select Airplane;
@@ -20,6 +24,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // GET api/Airplanes/5
+        /// <summary>
+        /// Returns a specific airplane by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Airplane</returns>
         public IHttpActionResult Get(int id)
         {
             var airplanesList = dc.Airplanes.SingleOrDefault(x => x.Id == id);
@@ -34,6 +43,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // POST api/Airplanes
+        /// <summary>
+        /// Creates a new airplane
+        /// </summary>
+        /// <param name="newAirplane"></param>
+        /// <returns>201 Created</returns>
         public IHttpActionResult Post([FromBody] Airplane newAirplane)
         {
 
@@ -65,6 +79,12 @@ namespace SkyTicket.API.Controllers
         }
 
         // PUT api/Airplanes/5
+        /// <summary>
+        /// Update an existing airplane
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newAirplane"></param>
+        /// <returns>200 OK</returns>
         public IHttpActionResult Put(int id, [FromBody] Airplane newAirplane)
         {
 
@@ -97,6 +117,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // DELETE api/Airplanes/5
+        /// <summary>
+        /// Deletes an existing airplane
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 OK</returns>
         public IHttpActionResult Delete(int id)
         {
 
