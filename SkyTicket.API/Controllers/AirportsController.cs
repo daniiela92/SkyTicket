@@ -7,81 +7,86 @@ using System.Web.Http;
 
 namespace SkyTicket.API.Controllers
 {
-    public class PassengersController : ApiController
+    public class AirportsController : ApiController
     {
         DataClasses1DataContext dc = new DataClasses1DataContext("workstation id = SkyTicketDatabase.mssql.somee.com; packet size = 4096; user id = daniielapaiis92_SQLLogin_1; pwd=mh1cyqg5pj;data source = SkyTicketDatabase.mssql.somee.com; persist security info=False;initial catalog = SkyTicketDatabase; TrustServerCertificate=True");
 
-        // GET api/Passengers
-        /// <summary>
-        /// Returns a list of all passengers
-        /// </summary>
-        /// <returns>List of passengers</returns>
-        public List<Passenger> Get()
-        {
-            var passengersList = from Passenger in dc.Passengers select Passenger;
 
-            return passengersList.ToList();
+        // GET api/Airports
+        /// <summary>
+        /// Returns a list of all airports
+        /// </summary>
+        /// <returns>List of airports</returns>
+        public List<Airport> Get()
+        {
+
+            var airportsList = from Airport in dc.Airports select Airport;
+
+            return airportsList.ToList();
+
+
         }
 
-        // GET api/Passengers/5
+        // GET api/Airports/5
         /// <summary>
-        /// Returns a passenger by ID
+        /// Returns a specific airport by its ID
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>The passenger</returns>
+        /// <returns>Airport</returns>
         public IHttpActionResult Get(int id)
         {
-            var passenger = dc.Passengers.SingleOrDefault(x => x.Id == id);
+            var airport = dc.Airports.SingleOrDefault(x => x.Id == id);
 
-            if (passenger != null)
+            if (airport != null)
             {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, passenger));
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, airport));
 
             }
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+
         }
 
-        // GET api/Passengers/passport
+        // GET api/Airports/IATACode/{iataCode}
         /// <summary>
-        /// Finds a passenger by passport number
+        /// Finds an airport by its IATA code
         /// </summary>
-        /// <param name="passport"></param>
-        /// <returns>The Passenger</returns>
-        [Route("api/Passengers/passport/{passport}")]
-        public IHttpActionResult GetByPassport(string passport)
+        /// <param name="iataCode"></param>
+        /// <returns>Airport</returns>
+        [Route("api/Airports/IATACode/{iataCode}")]
+        public IHttpActionResult GetByIATACode(string iataCode)
         {
-            var passenger = dc.Passengers.SingleOrDefault(x => x.Passport == passport);
+            var airport = dc.Airports.SingleOrDefault(x => x.IataCode == iataCode);
 
-            if (passenger != null)
+            if (airport != null)
             {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, passenger));
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, airport));
             }
 
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
 
-
         }
 
-        // POST api/Passengers
+
+        // POST api/Airports
         /// <summary>
-        /// Creates a new passenger
+        /// Creates a new airport
         /// </summary>
-        /// <param name="newPassenger"></param>
+        /// <param name="newAirport"></param>
         /// <returns>201 Created</returns>
-        public IHttpActionResult Post([FromBody] Passenger newPassenger)
+        public IHttpActionResult Post([FromBody] Airport newAirport)
         {
-            Passenger passenger = dc.Passengers.FirstOrDefault(p => p.Passport == newPassenger.Passport);
+            Airport airport = dc.Airports.FirstOrDefault(a => a.IataCode == newAirport.IataCode);
 
-            if (passenger != null)
+            if (airport != null)
             {
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
 
             }
 
-            dc.Passengers.InsertOnSubmit(newPassenger);
+            dc.Airports.InsertOnSubmit(newAirport);
 
             try
             {
@@ -96,32 +101,35 @@ namespace SkyTicket.API.Controllers
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created));
 
+
         }
 
-        // PUT api/Passengers/5
+        // PUT api/Airports/5
         /// <summary>
-        /// Updates an existing passenger
+        /// Updates an existing airport
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="newPassenger"></param>
+        /// <param name="newAirport"></param>
         /// <returns>200 OK</returns>
-        public IHttpActionResult Put(int id, [FromBody] Passenger newPassenger)
+        public IHttpActionResult Put(int id, [FromBody] Airport newAirport)
         {
 
-            Passenger passenger = dc.Passengers.FirstOrDefault(a => a.Id == id);
+            Airport airport = dc.Airports.FirstOrDefault(a => a.Id == id);
 
-            if (passenger == null)
+
+
+            if (airport == null)
             {
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
 
             }
 
-            passenger.FirstName = newPassenger.FirstName;
-            passenger.LastName = newPassenger.LastName;
-            passenger.Phone = newPassenger.Phone;
-            passenger.Email = newPassenger.Email;
-            passenger.Passport = newPassenger.Passport;
+            airport.Name = newAirport.Name;
+            airport.City = newAirport.City;
+            airport.Country = newAirport.Country;
+            airport.IataCode = newAirport.IataCode;
+            
 
             try
             {
@@ -134,22 +142,30 @@ namespace SkyTicket.API.Controllers
             }
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
+
         }
 
-        // DELETE api/Passengers/5
+        // DELETE api/Airports/5
         /// <summary>
-        /// Deletes a passenger by ID
+        /// Deletes an airport
         /// </summary>
         /// <param name="id"></param>
         /// <returns>200 OK</returns>
         public IHttpActionResult Delete(int id)
         {
+            Airport airport = dc.Airports.FirstOrDefault(a => a.Id == id);
 
-            Passenger passenger = dc.Passengers.FirstOrDefault(a => a.Id == id);
-
-            if (passenger != null)
+            if (airport != null)
             {
-                dc.Passengers.DeleteOnSubmit(passenger);
+
+                if (dc.Flights.Any(f => f.DepartureAirportId == id || f.ArrivalAirportId == id))
+                {
+
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+                }
+
+
+                dc.Airports.DeleteOnSubmit(airport);
 
                 try
                 {
@@ -164,7 +180,6 @@ namespace SkyTicket.API.Controllers
             }
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
-
         }
     }
 }

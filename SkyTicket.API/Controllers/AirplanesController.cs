@@ -31,11 +31,11 @@ namespace SkyTicket.API.Controllers
         /// <returns>Airplane</returns>
         public IHttpActionResult Get(int id)
         {
-            var airplanesList = dc.Airplanes.SingleOrDefault(x => x.Id == id);
+            var airplane = dc.Airplanes.SingleOrDefault(x => x.Id == id);
 
-            if (airplanesList != null)
+            if (airplane != null)
             {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, airplanesList));
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, airplane));
 
             }
 
@@ -50,16 +50,6 @@ namespace SkyTicket.API.Controllers
         /// <returns>201 Created</returns>
         public IHttpActionResult Post([FromBody] Airplane newAirplane)
         {
-
-            Airplane airplane = dc.Airplanes.FirstOrDefault(a => a.Id == newAirplane.Id);
-
-            if (airplane != null)
-            { 
-            
-                return ResponseMessage(Request.CreateResponse(System.Net.HttpStatusCode.Conflict));
-
-            }
-
             dc.Airplanes.InsertOnSubmit(newAirplane);
 
             try
@@ -74,8 +64,6 @@ namespace SkyTicket.API.Controllers
             }
             
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created));
-
-
         }
 
         // PUT api/Airplanes/5
@@ -129,7 +117,18 @@ namespace SkyTicket.API.Controllers
 
             if (airplane != null)
             {
-                dc.Airplanes.DeleteOnSubmit(airplane);
+
+                if(dc.Flights.Any(f => f.AirplaneId == id))
+                {
+
+                    airplane.IsActive = false;
+
+                }
+                else 
+                {
+                    dc.Airplanes.DeleteOnSubmit(airplane);
+                }
+
                 try
                 {
                     dc.SubmitChanges();
@@ -138,11 +137,15 @@ namespace SkyTicket.API.Controllers
                 {
                     return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
                 }
+                
+
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
 
             }
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
         }
+
+        // TODO - testar apagar avião que está em voo, deve desativar o avião e não apagar
     }
 }
