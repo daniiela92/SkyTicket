@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="SkyTicket.API/SkyTicket.API.csproj" Id="dd9e67d4-0700-4f73-8c70-966645a1f915" />
-  <Project Path="SkyTicket.Cliente/SkyTicket.Cliente.csproj" Id="89f72078-d981-4b13-b06d-c497022b7fc3" />
+  <Project Path="SkyTicket.Client/SkyTicket.Client.csproj" Id="86160a81-da79-410e-b5ac-19f7c1ba182b" />
 </Solution>

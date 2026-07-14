@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SkyTicket.Cliente.Properties
+namespace SkyTicket.Client.Properties
 {
 
 

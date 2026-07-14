@@ -54,8 +54,18 @@ namespace SkyTicket.API.Controllers
             if (airplane == null)
             {
 
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest));
 
+            }
+
+            if(newFlight.DepartureTime < DateTime.Now)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+
+            if (!airplane.IsActive)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
             }
 
             dc.Flights.InsertOnSubmit(newFlight);
@@ -95,9 +105,43 @@ namespace SkyTicket.API.Controllers
         }
 
         // DELETE api/Flights/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
+            Flight flight = dc.Flights.FirstOrDefault(f => f.Id == id);
+
+            if(flight == null)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            if(flight.DepartureTime < DateTime.Now)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+            }
+
+            var tickets = dc.Tickets.Where(t => t.FlightId == id);
+
+            dc.Tickets.DeleteAllOnSubmit(tickets);
+
+            var seats = dc.Seats.Where(s => s.FlightId == id);
+
+            dc.Seats.DeleteAllOnSubmit(seats);
+
+            dc.Flights.DeleteOnSubmit(flight);
+
+
+            try
+            {
+                dc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
+            }
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
+
         }
+
 
 
         private void GenerateSeats(Flight flight, Airplane airplane)
