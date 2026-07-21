@@ -45,6 +45,15 @@ namespace SkyTicket.API.Controllers
 
         }
 
+        //GET api/flights/{id}/seats
+        [Route("api/Flights/{id}/Seats")]
+        public List<Seat> GetSeats(int id)
+        {
+            var seats = dc.Seats.Where(s => s.FlightId == id).ToList();
+
+            return seats;
+        }
+
 
         // POST api/Flights
         public IHttpActionResult Post([FromBody] Flight newFlight)
