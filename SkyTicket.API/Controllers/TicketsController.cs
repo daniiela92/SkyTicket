@@ -54,62 +54,19 @@ namespace SkyTicket.API.Controllers
         // POST api/tickets
         public IHttpActionResult Post(Ticket newTicket)
         {
-            //Lugar existe?
             Seat seat = dc.Seats.FirstOrDefault(s => s.Id == newTicket.SeatId);
-
-            if(seat == null)
-            {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
-            } 
-
-            //Lugar está disponível?
-
-            if(!seat.IsAvailable)
-            {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
-            }
-
-            //Pertence a este voo?
-            if(seat.FlightId != newTicket.FlightId)
-            {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-
-
-            //Passageiro existe?
-            Passenger passenger = dc.Passengers.FirstOrDefault(p => p.Id == newTicket.PassengerId);
-
-            if(passenger == null)
-            {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
-            }
-
-            //Voo existe?
             Flight flight = dc.Flights.FirstOrDefault(f => f.Id == newTicket.FlightId);
 
-            
-            if(flight == null)
-            {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
-            }
+            IHttpActionResult error = ValidateTicket(newTicket, seat, flight);
 
-            if(flight.DepartureTime < DateTime.Now)
+            if (error != null)
             {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+                return error;
             }
 
             newTicket.PurchaseDate = DateTime.Now;
+            newTicket.Price = CalculatePrice(seat, flight);
 
-            if(seat.Class == 0)
-            {
-
-                newTicket.Price = flight.BasePrice * 1.5m;
-
-            }
-            else
-            {
-                newTicket.Price = flight.BasePrice; 
-            }
 
             seat.IsAvailable = false;
             dc.Tickets.InsertOnSubmit(newTicket);
@@ -131,6 +88,8 @@ namespace SkyTicket.API.Controllers
         // PUT api/tickets/5
         public void Put(int id, [FromBody] string value)
         {
+
+
         }
 
         // DELETE api/tickets/5
@@ -166,6 +125,64 @@ namespace SkyTicket.API.Controllers
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
 
+        }
+
+        /// <summary>
+        /// Valida os dados de um bilhete antes da venda.
+        /// </summary>
+        /// <param name="ticket">Bilhete a validar.</param>
+        /// <param name="seat">Lugar do bilhete (pode ser null se não existir).</param>
+        /// <param name="flight">Voo do bilhete (pode ser null se não existir).</param>
+        /// <returns>Resposta de erro, ou null se estiver tudo válido.</returns>
+        private IHttpActionResult ValidateTicket(Ticket ticket, Seat seat, Flight flight)
+        {
+            
+            if (seat == null)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            
+            if (!seat.IsAvailable)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+            }
+
+            
+            if (seat.FlightId != ticket.FlightId)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+
+            
+            if (flight == null)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            
+            if (flight.DepartureTime < DateTime.Now)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+            }
+
+            return null;   
+        }
+
+        /// <summary>
+        /// Calcula o preço do bilhete conforme a classe do lugar.
+        /// </summary>
+        /// <param name="seat">Lugar do bilhete.</param>
+        /// <param name="flight">Voo do bilhete.</param>
+        /// <returns>Preço final do bilhete.</returns>
+        private decimal CalculatePrice(Seat seat, Flight flight)
+        {
+            if (seat.Class == 0)   
+            {
+                return flight.BasePrice * 1.5m;
+            }
+
+            return flight.BasePrice;
         }
     }
 }
