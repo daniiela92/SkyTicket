@@ -19,7 +19,7 @@ namespace SkyTicket.Client
 
         private void BtnAirplanes_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Airplanes - not implemented yet");
+            new AirplanesWindow().Show();
         }
 
         private void BtnPassengers_Click(object sender, RoutedEventArgs e)
