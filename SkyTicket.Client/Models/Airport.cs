@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,11 @@ namespace SkyTicket.Client.Models
         public string City { get; set; }
         public string Country { get; set; }
         public string IataCode { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name} ({IataCode})";
+        }
 
     }
 }

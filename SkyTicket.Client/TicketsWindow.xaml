@@ -1,0 +1,64 @@
+﻿<Window x:Class="SkyTicket.Client.TicketsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Bilhetes" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#CC0000">
+            <TextBlock Text="SkyTicket - Bilhetes"
+                       Foreground="White"
+                       FontSize="34"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="30,0,0,0"/>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Background="#CC0000">
+                <Button Content="Comprar" Height="50" Margin="15,25,15,10" FontSize="16" Click="BtnCreate_Click"/>
+                <Button Content="Apagar" Height="50" Margin="15,10" FontSize="16" Click="BtnDelete_Click"/>
+                <Button Content="Voltar" Height="50" Margin="15,10" FontSize="16" Click="BtnBack_Click"/>
+            </StackPanel>
+
+            <Grid Grid.Column="1" Background="White" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock x:Name="LabelStatus"
+                           Grid.Row="0"
+                           Text=""
+                           Foreground="Gray"
+                           FontStyle="Italic"
+                           Margin="0,0,0,10"/>
+
+                <DataGrid x:Name="DataGridTickets"
+                          Grid.Row="1"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Passageiro (Id)" Binding="{Binding PassengerId}" Width="120"/>
+                        <DataGridTextColumn Header="Voo (Id)" Binding="{Binding FlightId}" Width="80"/>
+                        <DataGridTextColumn Header="Lugar (Id)" Binding="{Binding SeatId}" Width="80"/>
+                        <DataGridTextColumn Header="Preço" Binding="{Binding Price}" Width="100"/>
+                        <DataGridTextColumn Header="Data de Compra" Binding="{Binding PurchaseDate}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

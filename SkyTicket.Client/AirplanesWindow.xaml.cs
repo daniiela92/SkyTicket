@@ -1,7 +1,8 @@
-﻿using SkyTicket.API;
-using SkyTicket.Client.Services;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using SkyTicket.Client.Models;
+using SkyTicket.Client.Services;
 
 namespace SkyTicket.Client
 {

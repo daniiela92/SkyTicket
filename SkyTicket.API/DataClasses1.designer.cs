@@ -478,6 +478,7 @@ namespace SkyTicket.API
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Airport_Flight", Storage="_Flights", ThisKey="Id", OtherKey="ArrivalAirportId")]
+		[JsonIgnore]
 		public EntitySet<Flight> Flights
 		{
 			get
@@ -491,6 +492,7 @@ namespace SkyTicket.API
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Airport_Flight1", Storage="_Flights1", ThisKey="Id", OtherKey="DepartureAirportId")]
+		[JsonIgnore]
 		public EntitySet<Flight> Flights1
 		{
 			get
@@ -785,6 +787,7 @@ namespace SkyTicket.API
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Flight_Seat", Storage="_Seats", ThisKey="Id", OtherKey="FlightId")]
+		[JsonIgnore]
 		public EntitySet<Seat> Seats
 		{
 			get
@@ -798,6 +801,7 @@ namespace SkyTicket.API
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Flight_Ticket", Storage="_Tickets", ThisKey="Id", OtherKey="FlightId")]
+		[JsonIgnore]
 		public EntitySet<Ticket> Tickets
 		{
 			get
@@ -1316,6 +1320,7 @@ namespace SkyTicket.API
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Seat_Ticket", Storage="_Tickets", ThisKey="Id", OtherKey="SeatId")]
+		[JsonIgnore]
 		public EntitySet<Ticket> Tickets
 		{
 			get

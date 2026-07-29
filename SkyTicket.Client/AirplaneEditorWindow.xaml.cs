@@ -1,23 +1,11 @@
-﻿using SkyTicket.API;
+﻿using System;
+using System.Windows;
 using SkyTicket.Client.Models;
 using SkyTicket.Client.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SkyTicket.Client
 {
-  
+
     public partial class AirplaneEditorWindow : Window
     {
 
@@ -45,7 +33,7 @@ namespace SkyTicket.Client
                 TxtModel.Text = _airplaneToEdit.Model;
                 TxtEconomySeats.Text = _airplaneToEdit.EconomySeats.ToString();
                 TxtBusinessSeats.Text = _airplaneToEdit.BusinessSeats.ToString();
-            }  
+            }
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)

@@ -14,8 +14,7 @@ namespace SkyTicket.Client
 
         private void BtnAirports_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Airports - not implemented yet");
-        }
+            new AirportsWindow().Show();        }
 
         private void BtnAirplanes_Click(object sender, RoutedEventArgs e)
         {
@@ -24,17 +23,17 @@ namespace SkyTicket.Client
 
         private void BtnPassengers_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Passengers - not implemented yet");
+            new PassengersWindow().Show();
         }
 
         private void BtnFlights_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Flights - not implemented yet");
+            new FlightsWindow().Show();
         }
 
         private void BtnTickets_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Tickets - not implemented yet");
+            new TicketsWindow().Show();
         }
     
     }
