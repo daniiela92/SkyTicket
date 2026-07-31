@@ -70,6 +70,9 @@
     <Compile Include="AirportsWindow.xaml.cs">
       <DependentUpon>AirportsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CreditsWindow.xaml.cs">
+      <DependentUpon>CreditsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FlightEditorWindow.xaml.cs">
       <DependentUpon>FlightEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -88,9 +91,6 @@
       <DependentUpon>PassengersWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ApiService.cs" />
-    <Compile Include="TicketEditorWindow.xaml.cs">
-      <DependentUpon>TicketEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TicketsWindow.xaml.cs">
       <DependentUpon>TicketsWindow.xaml</DependentUpon>
     </Compile>
@@ -107,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="AirportsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreditsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,10 +139,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PassengersWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TicketEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -66,6 +66,13 @@
                         FontSize="16"
                         Click="BtnTickets_Click"/>
 
+                <Button x:Name="BtnCredits"
+                         Content="Credits"
+                        Height="50"
+                        Margin="15,10"
+                        FontSize="12"
+                        Click="BtnCredits_Click"/>
+
             </StackPanel>
 
             

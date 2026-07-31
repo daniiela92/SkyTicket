@@ -14,7 +14,8 @@ namespace SkyTicket.Client
 
         private void BtnAirports_Click(object sender, RoutedEventArgs e)
         {
-            new AirportsWindow().Show();        }
+            new AirportsWindow().Show();        
+        }
 
         private void BtnAirplanes_Click(object sender, RoutedEventArgs e)
         {
@@ -35,6 +36,11 @@ namespace SkyTicket.Client
         {
             new TicketsWindow().Show();
         }
-    
+
+        private void BtnCredits_Click(object sender, RoutedEventArgs e)
+        {
+            new CreditsWindow().Show();
+        }
+
     }
 }

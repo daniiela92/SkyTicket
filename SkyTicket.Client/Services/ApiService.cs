@@ -573,6 +573,31 @@ namespace SkyTicket.Client.Services
                 return new Response { IsSucess = false, Message = ex.Message };
             }
         }
+
+        public async Task<Response> GetTicketsByFlight(string urlBase, string controller, int flightId)
+        {
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(urlBase);
+
+                var response = await client.GetAsync($"{controller}/flight/{flightId}");
+                var result = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response { IsSucess = false, Message = result };
+                }
+
+                var tickets = JsonConvert.DeserializeObject<List<Ticket>>(result);
+
+                return new Response { IsSucess = true, Result = tickets };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSucess = false, Message = ex.Message };
+            }
+        }
     }
 }
     
