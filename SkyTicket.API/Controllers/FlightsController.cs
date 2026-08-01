@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Remoting.Messaging;
 using System.Web.Http;
 
 namespace SkyTicket.API.Controllers
@@ -56,7 +57,7 @@ namespace SkyTicket.API.Controllers
 
 
         // POST api/Flights
-        public IHttpActionResult Post([FromBody] Flight newFlight)
+        public IHttpActionResult Post(Flight newFlight)
         {
             Airplane airplane = dc.Airplanes.SingleOrDefault(x => x.Id == newFlight.AirplaneId);
 
@@ -109,8 +110,56 @@ namespace SkyTicket.API.Controllers
         
 
         // PUT api/Flights/5
-        public void Put(int id, [FromBody] string value)
+        public IHttpActionResult Put(int id, Flight newFlight)
         {
+            Flight flight = dc.Flights.FirstOrDefault(f => f.Id == id);
+
+            if (flight == null)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            int oldAirplaneId = flight.AirplaneId;
+
+            if(oldAirplaneId != newFlight.AirplaneId)
+            {
+                if(dc.Tickets.Any(t => t.FlightId == id))
+                {
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+                }
+
+                var oldSeats = dc.Seats.Where(s => s.FlightId == id).ToList();
+                dc.Seats.DeleteAllOnSubmit(oldSeats);
+                dc.SubmitChanges();
+
+                Airplane newAirplane = dc.Airplanes.SingleOrDefault(a => a.Id == newFlight.AirplaneId);
+
+                if (newAirplane == null || !newAirplane.IsActive)
+                {
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+                }
+
+                GenerateSeats(flight, newAirplane);
+            }
+
+            flight.FlightNumber = newFlight.FlightNumber;
+            flight.DepartureTime = newFlight.DepartureTime;
+            flight.ArrivalTime = newFlight.ArrivalTime;
+            flight.DepartureAirportId = newFlight.DepartureAirportId;
+            flight.ArrivalAirportId = newFlight.ArrivalAirportId;
+            flight.AirplaneId = newFlight.AirplaneId;
+            flight.BasePrice = newFlight.BasePrice;
+
+            try
+            {
+                dc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
+            }
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
         }
 
         // DELETE api/Flights/5
