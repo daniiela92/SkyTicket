@@ -102,6 +102,11 @@ namespace SkyTicket.Client
         {
             this.Close();
         }
+
+        private void BtnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            new FlightSearchWindow().Show();
+        }
     }
 }
 

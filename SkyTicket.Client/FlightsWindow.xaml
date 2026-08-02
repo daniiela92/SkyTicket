@@ -28,6 +28,7 @@
             <StackPanel Grid.Column="0" Background="#CC0000">
                 <Button Content="Criar" Height="50" Margin="15,25,15,10" FontSize="16" Click="BtnCreate_Click"/>
                 <Button Content="Editar" Height="50" Margin="15,10" FontSize="16" Click="BtnEdit_Click"/>
+                <Button Content="Pesquisar" Height="50" Margin="15,10" FontSize="16" Click="BtnSearch_Click"/>
                 <Button Content="Apagar" Height="50" Margin="15,10" FontSize="16" Click="BtnDelete_Click"/>
                 <Button Content="Voltar" Height="50" Margin="15,10" FontSize="16" Click="BtnBack_Click"/>
             </StackPanel>

@@ -76,14 +76,19 @@
     <Compile Include="FlightEditorWindow.xaml.cs">
       <DependentUpon>FlightEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FlightsSearchWindow.xaml.cs">
+      <DependentUpon>FlightsSearchWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FlightsWindow.xaml.cs">
       <DependentUpon>FlightsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Airplane.cs" />
     <Compile Include="Models\Flight.cs" />
+    <Compile Include="Models\FlightResultRow.cs" />
     <Compile Include="Models\Passenger.cs" />
     <Compile Include="Models\Seat.cs" />
     <Compile Include="Models\Ticket.cs" />
+    <Compile Include="Models\TicketRow.cs" />
     <Compile Include="PassengerEditorWindow.xaml.cs">
       <DependentUpon>PassengerEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -115,6 +120,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FlightEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FlightsSearchWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
