@@ -86,8 +86,65 @@ namespace SkyTicket.API.Controllers
         }
 
         // PUT api/tickets/5
-        public void Put(int id, [FromBody] string value)
+        public IHttpActionResult Put(int id, Ticket newTicket)
         {
+            Ticket ticket = dc.Tickets.FirstOrDefault(t => t.Id == id);
+
+            if(ticket == null)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+
+            if (ticket.Flight.DepartureTime < DateTime.Now)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+            }
+
+            if (ticket.SeatId != newTicket.SeatId)
+            {
+                Seat newSeat = dc.Seats.FirstOrDefault(s => s.Id == newTicket.SeatId);
+
+                if (newSeat == null)
+                {
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
+
+                }
+
+                if (!newSeat.IsAvailable)
+                {
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+
+                }
+                
+
+                if (newSeat.FlightId != ticket.FlightId)
+                {
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest));
+
+                }
+
+                ticket.Seat.IsAvailable = true;    
+                newSeat.IsAvailable = false;       
+                ticket.SeatId = newTicket.SeatId;  
+                ticket.Price = CalculatePrice(newSeat, ticket.Flight);
+
+
+            }
+
+            try
+            {
+                dc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.ServiceUnavailable, e));
+            }
+
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK));
+
+
 
 
         }
