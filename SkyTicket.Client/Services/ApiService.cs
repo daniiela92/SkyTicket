@@ -581,7 +581,7 @@ namespace SkyTicket.Client.Services
                 var client = new HttpClient();
                 client.BaseAddress = new Uri(urlBase);
 
-                var response = await client.GetAsync($"{controller}/flight/{flightId}");
+                var response = await client.GetAsync($"{controller}/FlightId/{flightId}");
                 var result = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
