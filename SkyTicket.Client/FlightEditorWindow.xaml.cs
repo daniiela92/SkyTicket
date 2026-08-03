@@ -3,17 +3,7 @@ using SkyTicket.Client.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SkyTicket.Client
 {
@@ -29,7 +19,7 @@ namespace SkyTicket.Client
         {
             InitializeComponent();
 
-                    
+
             _apiService = new ApiService();
             _flightToEdit = flight;
 
@@ -49,8 +39,8 @@ namespace SkyTicket.Client
 
         private async void LoadComboBoxes()
         {
-            var airportsResponse = await _apiService.GetAirports("https://localhost:44332/", "api/airports");
-            var airplanesResponse = await _apiService.GetAirplanes("https://localhost:44332/", "api/airplanes");
+            var airportsResponse = await _apiService.GetAirports("http://www.skyticketproject.somee.com/", "api/airports");
+            var airplanesResponse = await _apiService.GetAirplanes("http://www.skyticketproject.somee.com/", "api/airplanes");
 
             if (!airportsResponse.IsSucess || !airplanesResponse.IsSucess)
             {
@@ -65,7 +55,7 @@ namespace SkyTicket.Client
             CmbArrivalAirport.ItemsSource = airports;
             CmbAirplane.ItemsSource = airplanes;
 
-            // Se for edição, preenche os campos DEPOIS das listas estarem prontas
+
             if (_flightToEdit != null)
             {
                 TxtFlightNumber.Text = _flightToEdit.FlightNumber;
@@ -74,6 +64,7 @@ namespace SkyTicket.Client
                 CmbAirplane.SelectedValue = _flightToEdit.AirplaneId;
                 TxtDepartureTime.Text = _flightToEdit.DepartureTime.ToString("dd/MM/yyyy HH:mm");
                 TxtArrivalTime.Text = _flightToEdit.ArrivalTime.ToString("dd/MM/yyyy HH:mm");
+                TxtBasePrice.Text = _flightToEdit.BasePrice.ToString();
             }
         }
 
@@ -126,6 +117,12 @@ namespace SkyTicket.Client
                 return;
             }
 
+            if (!decimal.TryParse(TxtBasePrice.Text, out decimal basePrice) || basePrice <= 0)
+            {
+                LabelStatus.Text = "Indica um preço base válido (maior que zero).";
+                return;
+            }
+
             var flight = new Flight
             {
                 FlightNumber = TxtFlightNumber.Text,
@@ -133,19 +130,20 @@ namespace SkyTicket.Client
                 ArrivalAirportId = (int)CmbArrivalAirport.SelectedValue,
                 AirplaneId = (int)CmbAirplane.SelectedValue,
                 DepartureTime = departureTime,
-                ArrivalTime = arrivalTime
+                ArrivalTime = arrivalTime,
+                BasePrice = basePrice
             };
 
             Response response;
 
             if (_flightToEdit == null)
             {
-                response = await _apiService.PostFlight("https://localhost:44332/", "api/flights", flight);
+                response = await _apiService.PostFlight("http://www.skyticketproject.somee.com/", "api/flights", flight);
             }
             else
             {
                 flight.Id = _flightToEdit.Id;
-                response = await _apiService.PutFlight("https://localhost:44332/", "api/flights", _flightToEdit.Id, flight);
+                response = await _apiService.PutFlight("http://www.skyticketproject.somee.com/", "api/flights", _flightToEdit.Id, flight);
             }
 
             if (!response.IsSucess)
