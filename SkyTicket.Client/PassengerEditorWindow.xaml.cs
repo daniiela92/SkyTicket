@@ -95,7 +95,14 @@ namespace SkyTicket.Client
 
             if (!response.IsSucess)
             {
-                LabelStatus.Text = "Erro: " + response.Message;
+                if (!string.IsNullOrWhiteSpace(response.Message))
+                {
+                    LabelStatus.Text = "Erro: " + response.Message;
+                }
+                else
+                {
+                    LabelStatus.Text = "Não foi possível guardar. Já existe um passageiro com este número de passaporte.";
+                }
                 return;
             }
 

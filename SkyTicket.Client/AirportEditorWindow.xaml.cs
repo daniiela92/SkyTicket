@@ -86,7 +86,18 @@ namespace SkyTicket.Client
 
             if (!response.IsSucess)
             {
-                LabelStatus.Text = "Erro: " + response.Message;
+                if (!string.IsNullOrWhiteSpace(response.Message))
+                {
+                    LabelStatus.Text = "Erro: " + response.Message;
+                }
+                else if (_airportToEdit == null)
+                {
+                    LabelStatus.Text = "Não foi possível criar. Já existe um aeroporto com este código IATA.";
+                }
+                else
+                {
+                    LabelStatus.Text = "Não foi possível editar. Este aeroporto está a ser usado em voos.";
+                }
                 return;
             }
 

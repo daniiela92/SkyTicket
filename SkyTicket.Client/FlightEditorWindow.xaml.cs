@@ -148,7 +148,18 @@ namespace SkyTicket.Client
 
             if (!response.IsSucess)
             {
-                LabelStatus.Text = "Erro: " + response.Message;
+                if (!string.IsNullOrWhiteSpace(response.Message))
+                {
+                    LabelStatus.Text = "Erro: " + response.Message;
+                }
+                else if (_flightToEdit == null)
+                {
+                    LabelStatus.Text = "Não foi possível criar o voo. Verifica se o avião está ativo e se a partida é no futuro.";
+                }
+                else
+                {
+                    LabelStatus.Text = "Não foi possível editar o voo. Não é possível trocar o avião de um voo com bilhetes vendidos.";
+                }
                 return;
             }
 
