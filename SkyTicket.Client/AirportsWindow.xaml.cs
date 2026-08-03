@@ -24,7 +24,7 @@ namespace SkyTicket.Client
         {
             LabelStatus.Text = "A carregar aeroportos...";
 
-            var response = await _apiService.GetAirports("https://localhost:44332/", "api/airports");
+            var response = await _apiService.GetAirports("http://www.skyticketproject.somee.com/", "api/airports");
 
             if (!response.IsSucess)
             {
@@ -39,7 +39,7 @@ namespace SkyTicket.Client
         private void BtnCreate_Click(object sender, RoutedEventArgs e)
         {
             var editor = new AirportEditorWindow();
-            LoadAirports();
+            editor.Closed += (s, args) => LoadAirports();
             editor.Show();
         }
 
@@ -49,12 +49,11 @@ namespace SkyTicket.Client
 
             if (selected == null)
             {
-                MessageBox.Show("Seleciona um aeroporto na tabela primeiro.");
+                LabelStatus.Text = "Escolhe um aeroporto para editar.";
                 return;
             }
-
             var editor = new AirportEditorWindow(selected);
-            LoadAirports();
+            editor.Closed += (s, args) => LoadAirports();
             editor.Show();
         }
 
@@ -83,7 +82,7 @@ namespace SkyTicket.Client
 
             LabelStatus.Text = "A apagar aeroporto...";
 
-            var response = await _apiService.DeleteAirport("https://localhost:44332/", "api/airports", selected.Id);
+            var response = await _apiService.DeleteAirport("http://www.skyticketproject.somee.com/", "api/airports", selected.Id);
 
             if (!response.IsSucess)
             {

@@ -34,7 +34,7 @@ namespace SkyTicket.Client
         {
             LabelStatus.Text = "A carregar passageiros...";
 
-            var response = await _apiService.GetPassengers("https://localhost:44332/", "api/passengers");
+            var response = await _apiService.GetPassengers("http://www.skyticketproject.somee.com/", "api/passengers");
 
             if (!response.IsSucess)
             {
@@ -49,7 +49,7 @@ namespace SkyTicket.Client
         private void BtnCreate_Click(object sender, RoutedEventArgs e)
         {
             var editor = new PassengerEditorWindow();
-            LoadPassengers();
+            editor.Closed += (s, args) => LoadPassengers();
             editor.Show();
         }
 
@@ -64,7 +64,7 @@ namespace SkyTicket.Client
             }
 
             var editor = new PassengerEditorWindow(selected);
-            LoadPassengers();
+            editor.Closed += (s, args) => LoadPassengers();
             editor.Show();
         }
 
@@ -93,7 +93,7 @@ namespace SkyTicket.Client
 
             LabelStatus.Text = "A apagar passageiro...";
 
-            var response = await _apiService.DeletePassenger("https://localhost:44332/", "api/passengers", selected.Id);
+            var response = await _apiService.DeletePassenger("http://www.skyticketproject.somee.com/", "api/passengers", selected.Id);
 
             if (!response.IsSucess)
             {

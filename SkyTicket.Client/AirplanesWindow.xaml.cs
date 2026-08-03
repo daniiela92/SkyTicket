@@ -22,7 +22,7 @@ namespace SkyTicket.Client
         {
             LabelStatus.Text = "A carregar aviões...";
 
-            var response = await apiService.GetAirplanes("https://localhost:44332/", "api/airplanes");
+            var response = await apiService.GetAirplanes("http://www.skyticketproject.somee.com/", "api/airplanes");
 
             if (!response.IsSucess)
             {
@@ -36,8 +36,9 @@ namespace SkyTicket.Client
 
         private void BtnCreate_Click(object sender, RoutedEventArgs e)
         {
-            new AirplaneEditorWindow().Show();
-            LoadAirplanes();
+            var editor = new AirplaneEditorWindow();
+            editor.Closed += (s, args) => LoadAirplanes();
+            editor.Show();
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
@@ -51,9 +52,9 @@ namespace SkyTicket.Client
                 return;
             }
 
-            new AirplaneEditorWindow(selected).Show();
-
-            LoadAirplanes();
+            var editor = new AirplaneEditorWindow(selected);
+            editor.Closed += (s, args) => LoadAirplanes();
+            editor.Show();
         }
 
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -79,7 +80,7 @@ namespace SkyTicket.Client
 
             LabelStatus.Text = "A apagar avião...";
 
-            var response = await apiService.DeleteAirplane("https://localhost:44332/", "api/airplanes", aviao.Id);
+            var response = await apiService.DeleteAirplane("http://www.skyticketproject.somee.com/", "api/airplanes", aviao.Id);
 
             if (!response.IsSucess)
             {
