@@ -15,6 +15,11 @@ namespace SkyTicket.API.Controllers
 
 
         // GET api/Flights
+        // GET api/Flights
+        /// <summary>
+        /// Returns a list of all flights
+        /// </summary>
+        /// <returns>List of flights</returns>
         public List<Flight> Get()
         {
            var flightsList = from Flight in dc.Flights select Flight;
@@ -23,6 +28,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // GET api/Flights/5
+        /// <summary>
+        /// Returns a specific flight by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Flight</returns>
         public IHttpActionResult Get(int id)
         {
 
@@ -37,6 +47,11 @@ namespace SkyTicket.API.Controllers
         }
 
         //GET api/Flights/FlightNumber/{flightNumber}
+        /// <summary>
+        /// Finds flights by their flight number
+        /// </summary>
+        /// <param name="flightNumber"></param>
+        /// <returns>List of flights</returns>
         [Route("api/Flights/FlightNumber/{flightNumber}")]
         public List<Flight> GetByFlightNumber(string flightNumber)
         {
@@ -47,6 +62,11 @@ namespace SkyTicket.API.Controllers
         }
 
         //GET api/flights/{id}/seats
+        /// <summary>
+        /// Returns the seats of a flight
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of seats</returns>
         [Route("api/Flights/{id}/Seats")]
         public List<Seat> GetSeats(int id)
         {
@@ -57,6 +77,11 @@ namespace SkyTicket.API.Controllers
 
 
         // POST api/Flights
+        /// <summary>
+        /// Creates a new flight and generates its seats automatically
+        /// </summary>
+        /// <param name="newFlight"></param>
+        /// <returns>201 Created</returns>
         public IHttpActionResult Post(Flight newFlight)
         {
             Airplane airplane = dc.Airplanes.SingleOrDefault(x => x.Id == newFlight.AirplaneId);
@@ -107,9 +132,15 @@ namespace SkyTicket.API.Controllers
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created));
         }
 
-        
+
 
         // PUT api/Flights/5
+        /// <summary>
+        /// Updates a flight; regenerates seats if the airplane changes
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newFlight"></param>
+        /// <returns>200 OK, or 409 if changing airplane on a flight with tickets</returns>
         public IHttpActionResult Put(int id, Flight newFlight)
         {
             Flight flight = dc.Flights.FirstOrDefault(f => f.Id == id);
@@ -163,6 +194,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // DELETE api/Flights/5
+        /// <summary>
+        /// Deletes a flight and its seats and tickets
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 OK, or 409 if the flight has already departed</returns>
         public IHttpActionResult Delete(int id)
         {
             Flight flight = dc.Flights.FirstOrDefault(f => f.Id == id);
@@ -201,7 +237,11 @@ namespace SkyTicket.API.Controllers
         }
 
 
-
+        /// <summary>
+        /// Generates the seats for a flight based on the airplane's capacity
+        /// </summary>
+        /// <param name="flight"></param>
+        /// <param name="airplane"></param>
         private void GenerateSeats(Flight flight, Airplane airplane)
         {
 

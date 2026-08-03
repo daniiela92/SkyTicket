@@ -125,6 +125,11 @@ namespace SkyTicket.API.Controllers
 
             }
 
+            if (dc.Flights.Any(f => f.DepartureAirportId == id || f.ArrivalAirportId == id))
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Conflict));
+            }
+
             airport.Name = newAirport.Name;
             airport.City = newAirport.City;
             airport.Country = newAirport.Country;

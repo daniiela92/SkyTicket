@@ -14,6 +14,10 @@ namespace SkyTicket.API.Controllers
 
 
         // GET api/tickets
+        /// <summary>
+        /// Returns a list of all tickets
+        /// </summary>
+        /// <returns>List of tickets</returns>
         public List<Ticket> Get()
         {
             var ticketsList = from Ticket in dc.Tickets select Ticket;
@@ -22,6 +26,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // GET api/tickets/5
+        /// <summary>
+        /// Returns a specific ticket by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Ticket</returns>
         public IHttpActionResult Get(int id)
         {
             var ticket = dc.Tickets.SingleOrDefault(x => x.Id == id);
@@ -35,6 +44,11 @@ namespace SkyTicket.API.Controllers
         }
 
         //GET api/tickets/FlightId/{flightId}
+        /// <summary>
+        /// Returns the tickets of a flight
+        /// </summary>
+        /// <param name="flightId"></param>
+        /// <returns>List of tickets</returns>
         [Route("api/tickets/FlightId/{flightId}")]
         public List<Ticket> GetByFlightId(int flightId)
         {
@@ -43,15 +57,24 @@ namespace SkyTicket.API.Controllers
         }
 
         //GET api/tickets/PassengerId/{passengerId}
+        /// <summary>
+        /// Returns the tickets of a passenger
+        /// </summary>
+        /// <param name="passengerId"></param>
+        /// <returns>List of tickets</returns>
         [Route("api/Tickets/passenger/{passengerId}")]
         public List<Ticket> GetByPassenger(int passengerId)
         {
             var tickets = dc.Tickets.Where(t => t.PassengerId == passengerId).ToList();
 
             return tickets;
-        } 
+        }
 
         // POST api/tickets
+        /// <summary>
+        /// Buys a ticket for a passenger on a specific seat, marking it as unavailable
+        /// </summary>
+        /// <param name="newTicket"></param>
         public IHttpActionResult Post(Ticket newTicket)
         {
             Seat seat = dc.Seats.FirstOrDefault(s => s.Id == newTicket.SeatId);
@@ -86,6 +109,12 @@ namespace SkyTicket.API.Controllers
         }
 
         // PUT api/tickets/5
+        /// <summary>
+        /// Changes a ticket's seat, freeing the old one and taking the new one
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newTicket"></param>
+        /// <returns>200 OK; 409 if the seat is taken; 400 if it belongs to another flight</returns>
         public IHttpActionResult Put(int id, Ticket newTicket)
         {
             Ticket ticket = dc.Tickets.FirstOrDefault(t => t.Id == id);
@@ -123,10 +152,13 @@ namespace SkyTicket.API.Controllers
 
                 }
 
-                ticket.Seat.IsAvailable = true;    
-                newSeat.IsAvailable = false;       
-                ticket.SeatId = newTicket.SeatId;  
+                Seat oldSeat = dc.Seats.FirstOrDefault(s => s.Id == ticket.SeatId);
+
+                ticket.SeatId = newSeat.Id;
                 ticket.Price = CalculatePrice(newSeat, ticket.Flight);
+
+                oldSeat.IsAvailable = true;
+                newSeat.IsAvailable = false;
 
 
             }
@@ -150,6 +182,11 @@ namespace SkyTicket.API.Controllers
         }
 
         // DELETE api/tickets/5
+        /// <summary>
+        /// Cancels a ticket and frees its seat
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 OK, or 409 if the flight has already departed</returns>
         public IHttpActionResult Delete(int id)
         {
             Ticket ticket = dc.Tickets.FirstOrDefault(t  => t.Id == id);
@@ -185,12 +222,12 @@ namespace SkyTicket.API.Controllers
         }
 
         /// <summary>
-        /// Valida os dados de um bilhete antes da venda.
+        /// Validates a ticket's data before the sale.
         /// </summary>
-        /// <param name="ticket">Bilhete a validar.</param>
-        /// <param name="seat">Lugar do bilhete (pode ser null se não existir).</param>
-        /// <param name="flight">Voo do bilhete (pode ser null se não existir).</param>
-        /// <returns>Resposta de erro, ou null se estiver tudo válido.</returns>
+        /// <param name="ticket">Ticket to validate.</param>
+        /// <param name="seat">Ticket's seat (may be null if it does not exist).</param>
+        /// <param name="flight">Ticket's flight (may be null if it does not exist).</param>
+        /// <returns>An error response, or null if everything is valid.</returns>
         private IHttpActionResult ValidateTicket(Ticket ticket, Seat seat, Flight flight)
         {
             
@@ -227,11 +264,11 @@ namespace SkyTicket.API.Controllers
         }
 
         /// <summary>
-        /// Calcula o preço do bilhete conforme a classe do lugar.
+        /// Calculates the ticket price according to the seat class.
         /// </summary>
-        /// <param name="seat">Lugar do bilhete.</param>
-        /// <param name="flight">Voo do bilhete.</param>
-        /// <returns>Preço final do bilhete.</returns>
+        /// <param name="seat">Ticket's seat.</param>
+        /// <param name="flight">Ticket's flight.</param>
+        /// <returns>Final ticket price.</returns>
         private decimal CalculatePrice(Seat seat, Flight flight)
         {
             if (seat.Class == 0)   

@@ -146,6 +146,6 @@ namespace SkyTicket.API.Controllers
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
-        // TODO - testar apagar avião que está em voo, deve desativar o avião e não apagar
+        
     }
 }
