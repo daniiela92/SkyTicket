@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,14 +17,6 @@ namespace SkyTicket.Client
         private int? selectedSeatId = null;
         private Button selectedSeatButton = null;
 
-        // Classe simples só para mostrar a tabela com nomes legíveis
-        private class TicketRow
-        {
-            public int Id { get; set; }
-            public string PassengerName { get; set; }
-            public string SeatCode { get; set; }
-        }
-
         public TicketsWindow()
         {
             InitializeComponent();
@@ -33,8 +26,8 @@ namespace SkyTicket.Client
 
         private async void LoadInitialData()
         {
-            var passengersResponse = await apiService.GetPassengers("https://localhost:44332/", "api/passengers");
-            var flightsResponse = await apiService.GetFlights("https://localhost:44332/", "api/flights");
+            var passengersResponse = await apiService.GetPassengers("http://www.skyticketproject.somee.com/", "api/passengers");
+            var flightsResponse = await apiService.GetFlights("http://www.skyticketproject.somee.com/", "api/flights");
 
             if (!passengersResponse.IsSucess || !flightsResponse.IsSucess)
             {
@@ -68,11 +61,11 @@ namespace SkyTicket.Client
             await LoadTicketsForFlight(flightId);
         }
 
-        private async System.Threading.Tasks.Task LoadSeats(int flightId)
+        private async Task LoadSeats(int flightId)
         {
             LabelStatus.Text = "A carregar lugares...";
 
-            var response = await apiService.GetSeatsByFlight("https://localhost:44332/", "api/flights", flightId);
+            var response = await apiService.GetSeatsByFlight("http://www.skyticketproject.somee.com/", "api/flights", flightId);
 
             if (!response.IsSucess)
             {
@@ -147,9 +140,9 @@ namespace SkyTicket.Client
             BtnBuy.IsEnabled = true;
         }
 
-        private async System.Threading.Tasks.Task LoadTicketsForFlight(int flightId)
+        private async Task LoadTicketsForFlight(int flightId)
         {
-            var response = await apiService.GetTicketsByFlight("https://localhost:44332/", "api/tickets", flightId);
+            var response = await apiService.GetTicketsByFlight("http://www.skyticketproject.somee.com/", "api/tickets", flightId);
 
             if (!response.IsSucess)
             {
@@ -201,7 +194,7 @@ namespace SkyTicket.Client
                 SeatId = selectedSeatId.Value
             };
 
-            var response = await apiService.PostTicket("https://localhost:44332/", "api/tickets", ticket);
+            var response = await apiService.PostTicket("http://www.skyticketproject.somee.com/", "api/tickets", ticket);
 
             if (!response.IsSucess)
             {
@@ -247,7 +240,7 @@ namespace SkyTicket.Client
 
             LabelStatus.Text = "A cancelar bilhete...";
 
-            var response = await apiService.DeleteTicket("https://localhost:44332/", "api/tickets", selected.Id);
+            var response = await apiService.DeleteTicket("http://www.skyticketproject.somee.com/", "api/tickets", selected.Id);
 
             if (!response.IsSucess)
             {
