@@ -76,12 +76,12 @@ namespace SkyTicket.Client
 
             if (_airportToEdit == null)
             {
-                response = await _apiService.PostAirport("https://localhost:44332/", "api/airports", airport);
+                response = await _apiService.PostAirport("http://www.skyticketproject.somee.com/", "api/airports", airport);
             }
             else
             {
                 airport.Id = _airportToEdit.Id;
-                response = await _apiService.PutAirport("https://localhost:44332/", "api/airports", _airportToEdit.Id, airport);
+                response = await _apiService.PutAirport("http://www.skyticketproject.somee.com/", "api/airports", _airportToEdit.Id, airport);
             }
 
             if (!response.IsSucess)

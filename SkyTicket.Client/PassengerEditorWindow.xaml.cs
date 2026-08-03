@@ -85,12 +85,12 @@ namespace SkyTicket.Client
 
             if (_passengerToEdit == null)
             {
-                response = await _apiService.PostPassenger("https://localhost:44332/", "api/passengers", passenger);
+                response = await _apiService.PostPassenger("http://www.skyticketproject.somee.com/", "api/passengers", passenger);
             }
             else
             {
                 passenger.Id = _passengerToEdit.Id;
-                response = await _apiService.PutPassenger("https://localhost:44332/", "api/passengers", _passengerToEdit.Id, passenger);
+                response = await _apiService.PutPassenger("http://www.skyticketproject.somee.com/", "api/passengers", _passengerToEdit.Id, passenger);
             }
 
             if (!response.IsSucess)

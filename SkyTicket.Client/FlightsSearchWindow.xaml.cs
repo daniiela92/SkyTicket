@@ -26,8 +26,8 @@ namespace SkyTicket.Client
         {
             LabelStatus.Text = "A carregar dados...";
 
-            var airportsResponse = await _apiService.GetAirports("https://localhost:44332/", "api/airports");
-            var flightsResponse = await _apiService.GetFlights("https://localhost:44332/", "api/flights");
+            var airportsResponse = await _apiService.GetAirports("http://www.skyticketproject.somee.com/", "api/airports");
+            var flightsResponse = await _apiService.GetFlights("http://www.skyticketproject.somee.com/", "api/flights");
 
             if (!airportsResponse.IsSucess || !flightsResponse.IsSucess)
             {

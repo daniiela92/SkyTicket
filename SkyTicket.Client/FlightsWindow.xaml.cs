@@ -24,7 +24,7 @@ namespace SkyTicket.Client
         {
             LabelStatus.Text = "A carregar voos...";
 
-            var response = await _apiService.GetFlights("https://localhost:44332/", "api/flights");
+            var response = await _apiService.GetFlights("http://www.skyticketproject.somee.com/", "api/flights");
 
             if (!response.IsSucess)
             {
@@ -86,7 +86,7 @@ namespace SkyTicket.Client
 
             LabelStatus.Text = "A apagar voo...";
 
-            var response = await _apiService.DeleteFlight("https://localhost:44332/", "api/flights", selected.Id);
+            var response = await _apiService.DeleteFlight("http://www.skyticketproject.somee.com/", "api/flights", selected.Id);
 
             if (!response.IsSucess)
             {
